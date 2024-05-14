@@ -6,6 +6,8 @@ import com.sparta.personalassignment.schedule.entity.Schedule;
 import com.sparta.personalassignment.schedule.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -23,5 +25,14 @@ public class ScheduleService {
 
    public ScheduleResDto findById(Long id) {
        return new ScheduleResDto(Objects.requireNonNull(scheduleRepository.findById(id).orElse(null)));
+   }
+
+   public List<ScheduleResDto> findAll() {
+       List<Schedule> schedules = scheduleRepository.findAll();
+       List<ScheduleResDto> scheduleResDtos = new ArrayList<>();
+       for (Schedule schedule : schedules) {
+           scheduleResDtos.add(new ScheduleResDto(schedule));
+       }
+       return scheduleResDtos;
    }
 }

@@ -7,6 +7,8 @@ import com.sparta.personalassignment.schedule.service.ScheduleService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/schedules")
 public class ScheduleController {
@@ -23,5 +25,9 @@ public class ScheduleController {
     @GetMapping("/{id}")
     public ScheduleResDto searchSchedule (@PathVariable Long id) {
         return scheduleService.findById(id);
+    }
+    @GetMapping
+    public List<ScheduleResDto> searchSchedules () {
+        return scheduleService.findAll();
     }
 }
