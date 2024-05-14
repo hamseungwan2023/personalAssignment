@@ -19,4 +19,9 @@ public class ScheduleController {
     public ScheduleResDto save (@Valid @RequestBody ScheduleReqDto reqDto) {
         return scheduleService.save(reqDto);
     }
+
+    @GetMapping("/{id}")
+    public ScheduleResDto searchSchedule (@PathVariable Long id) {
+        return scheduleService.findById(id);
+    }
 }

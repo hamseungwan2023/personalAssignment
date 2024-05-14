@@ -4,7 +4,6 @@ import com.sparta.personalassignment.schedule.entity.Schedule;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 public class ScheduleResDto {
@@ -21,6 +20,6 @@ public class ScheduleResDto {
         this.detail = schedule.getDetail();
         this.person = schedule.getPerson();
         this.password = schedule.getPassword();
-        this.date = LocalDate.now();
+        this.date = schedule.getDate().toLocalDate();
     }
 }
