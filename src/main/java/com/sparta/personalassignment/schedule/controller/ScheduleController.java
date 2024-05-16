@@ -54,7 +54,7 @@ public class ScheduleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateSchedule(@RequestParam String password, @PathVariable Long id, @RequestBody ScheduleReqDto reqDto) {
+    public ResponseEntity<?> updateSchedule(@RequestParam String password, @PathVariable Long id,@Valid @RequestBody ScheduleReqDto reqDto) {
         try {
             ScheduleResDto savedSchedule = scheduleService.updateSchedule(id, password, reqDto);
             Map<String, Object> response = new HashMap<>();
@@ -78,6 +78,14 @@ public class ScheduleController {
             ResponseEntity.status(400);
             return ResponseEntity.status(400).body(e.getMessage());
         }
+    }
+    @ExceptionHandler
+    private ResponseEntity<String> handleException(IllegalArgumentException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 
+    @ExceptionHandler
+    private ResponseEntity<String> handleException(MethodArgumentNotValidException e) {
+        return new ResponseEntity<>(Objects.requireNonNull(e.getFieldError()).getDefaultMessage(), HttpStatus.BAD_REQUEST);
     }
 }

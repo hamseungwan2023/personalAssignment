@@ -22,20 +22,16 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "제목은 필수 입력값입니다.")
     @Column(name = "title", nullable = false, length = 20)
     private String title;
 
-    @NotBlank(message = "내용은 필수 입력값입니다.")
     @Column(name = "detail", nullable = false, length = 500)
     private String detail;
 
-    @NotBlank(message = "담당자는 필수 입력값입니다.")
     @Column(name = "person", nullable = false, length = 10)
     @Email
     private String person;
 
-    @NotBlank(message = "비밀번호는 필수 입력값입니다.")
     @Column(name = "password", nullable = false, length = 20)
     private String password;
 
