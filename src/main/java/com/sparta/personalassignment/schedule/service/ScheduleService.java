@@ -43,12 +43,24 @@ public class ScheduleService {
     //일정 수정
     @Transactional
     public ScheduleResDto updateSchedule(Long id, String password, ScheduleReqDto reqDto) {
-        Schedule schedule = scheduleRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 아이디 값은 존재하지 않습니다."));
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 아이디 값은 존재하지 않습니다."));
         if (password.equals(schedule.getPassword())) {
             schedule.update(reqDto);
             return new ScheduleResDto(schedule);
         } else {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
+        }
+    }
+
+    //일정 삭제
+    public String deleteSchedule(Long id, String password) {
+        Schedule schedule = scheduleRepository.findById(id).orElse(null);
+        if (password.equals(schedule.getPassword())) {
+            scheduleRepository.delete(schedule);
+            return "삭제 완료";
+
+        } else {
+            return "삭제 안됨";
         }
     }
 }

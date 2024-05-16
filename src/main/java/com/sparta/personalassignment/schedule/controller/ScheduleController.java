@@ -35,4 +35,10 @@ public class ScheduleController {
     public ScheduleResDto updateSchedule (@RequestParam String password,@PathVariable Long id, @RequestBody ScheduleReqDto reqDto) {
         return scheduleService.updateSchedule(id,password,reqDto);
     }
+
+    @DeleteMapping("/{id}")
+    public String deleteSchedule (@RequestParam String password, @PathVariable Long id) {
+        scheduleService.deleteSchedule(id, password);
+        return "삭제완료 !";
+    }
 }
