@@ -53,14 +53,10 @@ public class ScheduleService {
     }
 
     //일정 삭제
-    public String deleteSchedule(Long id, String password) {
+    public void deleteSchedule(Long id, String password) {
         Schedule schedule = scheduleRepository.findById(id).orElse(null);
         if (password.equals(schedule.getPassword())) {
             scheduleRepository.delete(schedule);
-            return "삭제 완료";
-
-        } else {
-            return "삭제 안됨";
         }
     }
 }
