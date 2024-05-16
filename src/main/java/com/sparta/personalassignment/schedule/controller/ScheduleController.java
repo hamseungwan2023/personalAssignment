@@ -30,4 +30,9 @@ public class ScheduleController {
     public List<ScheduleResDto> searchSchedules () {
         return scheduleService.findAll();
     }
+
+    @PutMapping("/{id}")
+    public ScheduleResDto updateSchedule (@RequestParam String password,@PathVariable Long id, @RequestBody ScheduleReqDto reqDto) {
+        return scheduleService.updateSchedule(id,password,reqDto);
+    }
 }

@@ -2,6 +2,7 @@ package com.sparta.personalassignment.schedule.entity;
 
 
 import com.sparta.personalassignment.schedule.dto.ScheduleReqDto;
+import com.sparta.personalassignment.schedule.dto.ScheduleResDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,5 +44,10 @@ public class Schedule {
         this.detail = reqDto.getDetail();
         this.person = reqDto.getPerson();
         this.password = reqDto.getPassword();
+    }
+    public void update (ScheduleReqDto reqDto){
+        this.title = reqDto.getTitle();
+        this.detail = reqDto.getDetail();
+        this.person = reqDto.getPerson();
     }
 }
