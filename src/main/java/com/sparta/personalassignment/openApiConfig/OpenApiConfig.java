@@ -15,9 +15,9 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI openAPI() {
         Info info = new Info()
-                .title("swagger 테스트")
+                .title("일정관리 api")
                 .version("1.0")
-                .description("API에 대한 설명 부분");
+                .description("일정관리에 관한 api가이드 페이지");
         return new OpenAPI()
                 .components(new Components())
                 .info(info);
