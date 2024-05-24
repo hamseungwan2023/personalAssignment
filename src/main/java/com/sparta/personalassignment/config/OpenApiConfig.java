@@ -1,4 +1,4 @@
-package com.sparta.personalassignment.openApiConfig;
+package com.sparta.personalassignment.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

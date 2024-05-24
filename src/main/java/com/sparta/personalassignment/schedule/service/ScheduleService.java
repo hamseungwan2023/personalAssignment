@@ -3,9 +3,12 @@ package com.sparta.personalassignment.schedule.service;
 import com.sparta.personalassignment.schedule.dto.ScheduleReqDto;
 import com.sparta.personalassignment.schedule.dto.ScheduleResDto;
 import com.sparta.personalassignment.schedule.entity.Schedule;
+import com.sparta.personalassignment.schedule.entity.User;
 import com.sparta.personalassignment.schedule.repository.ScheduleRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +23,8 @@ public class ScheduleService {
     }
 
     //일정 생성
-    public ScheduleResDto save(ScheduleReqDto reqDto) {
-        Schedule schedule = new Schedule(reqDto);
+    public ScheduleResDto save(ScheduleReqDto reqDto, @AuthenticationPrincipal User user) {
+        Schedule schedule = new Schedule(reqDto,user);
         return new ScheduleResDto(scheduleRepository.save(schedule));
     }
 
@@ -42,9 +45,9 @@ public class ScheduleService {
 
     //일정 수정
     @Transactional
-    public ScheduleResDto updateSchedule(Long id, String password, ScheduleReqDto reqDto) {
+    public ScheduleResDto updateSchedule(Long id, String password, ScheduleReqDto reqDto, @AuthenticationPrincipal User user) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 아이디 값은 존재하지 않습니다."));
-        if (password.equals(schedule.getPassword())) {
+        if (password.equals(user.getPassword())) {
             schedule.update(reqDto);
             return new ScheduleResDto(schedule);
         } else {
@@ -53,10 +56,14 @@ public class ScheduleService {
     }
 
     //일정 삭제
-    public void deleteSchedule(Long id, String password) {
-        Schedule schedule = scheduleRepository.findById(id).orElse(null);
-        if (password.equals(schedule.getPassword())) {
-            scheduleRepository.delete(schedule);
-        }
+    public void deleteSchedule(Long id, String password, @AuthenticationPrincipal User user ) {
+             scheduleRepository.findById(id).orElseThrow(
+                     ()-> new IllegalArgumentException("해당 아이디 값은 존재하지 않습니다.")
+            );
+                if (password.equals(user.getPassword())) {
+                    scheduleRepository.deleteById(id);
+                } else{
+                    throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+                }
     }
 }
