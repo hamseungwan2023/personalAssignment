@@ -20,6 +20,7 @@ import java.util.Map;
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtUtil jwtUtil;
+    private String username;
 
     public JwtAuthenticationFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
@@ -49,11 +50,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
-        String token = jwtUtil.createToken(username, role);
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
+        String accessToken = jwtUtil.createToken(username, role);
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, accessToken);
+
+        String refreshToken = jwtUtil.createRefreshToken(username, role);
 
         Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("token", token);
+        responseBody.put("accessToken", accessToken);
+        responseBody.put("refreshToken", refreshToken);
         responseBody.put("username", username);
 
         response.setContentType("application/json");
@@ -68,7 +72,22 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
-        response.setStatus(401);
+        String accessToken = request.getHeader(JwtUtil.AUTHORIZATION_HEADER);
+        String refreshToken = request.getHeader(JwtUtil.AUTHORIZATION_HEADER);
+        if(accessToken != null){
+            if(jwtUtil.validateToken(accessToken,response)){
+                response.addHeader(JwtUtil.AUTHORIZATION_HEADER, accessToken);
+            } else if (!jwtUtil.validateToken(accessToken,response) && refreshToken != null) {
+                String newAccessToken = jwtUtil.createToken(username, UserRoleEnum.USER);
+                response.addHeader(JwtUtil.AUTHORIZATION_HEADER, newAccessToken);
+                response.addHeader(JwtUtil.AUTHORIZATION_HEADER, refreshToken);
+            }else{
+                throw new IllegalArgumentException(String.valueOf(response));
+            }
+        }else{
+            response.setStatus(400);
+            throw new IllegalArgumentException(String.valueOf(failed));
+        }
     }
 
 }

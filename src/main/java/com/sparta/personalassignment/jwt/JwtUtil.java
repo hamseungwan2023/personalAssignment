@@ -1,4 +1,5 @@
 package com.sparta.personalassignment.jwt;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.personalassignment.schedule.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.ErrorResponse;
 
 import java.io.IOException;
 import java.security.Key;
@@ -26,10 +26,15 @@ public class JwtUtil {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     // 사용자 권한 값의 KEY
     public static final String AUTHORIZATION_KEY = "auth";
+    // 리프레쉬토큰 KEY
+    public static final String REFRESH_KEY = "oauth";
+
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
     // 토큰 만료시간
     private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
+
+    private final long REFRESH_TOKEN_TIME = TOKEN_TIME * 1000L;
 
     @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
     private String secretKey;
@@ -54,6 +59,18 @@ public class JwtUtil {
                         .setIssuedAt(date) // 발급일
                         .signWith(key, signatureAlgorithm) // 암호화 알고리즘
                         .compact();
+    }
+    //refreshToken 생성
+    public String createRefreshToken(String username, UserRoleEnum role) {
+        Date date = new Date();
+
+        return BEARER_PREFIX + Jwts.builder()
+                .setSubject(username)
+                .claim(REFRESH_KEY, role)
+                .setExpiration(new Date(date.getTime() + REFRESH_TOKEN_TIME))
+                .setIssuedAt(date)
+                .signWith(key, signatureAlgorithm)
+                .compact();
     }
 
     // header 에서 JWT 가져오기
@@ -97,6 +114,7 @@ public class JwtUtil {
             log.error("Error writing error response", e);
         }
     }
+
     // 토큰에서 사용자 정보 가져오기
     public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
