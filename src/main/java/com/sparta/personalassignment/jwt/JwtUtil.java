@@ -1,6 +1,6 @@
 package com.sparta.personalassignment.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.personalassignment.Exception.SetErrorResponse;
 import com.sparta.personalassignment.schedule.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -9,15 +9,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Map;
 
 @Slf4j(topic = "JwtUtil")
 @Component
@@ -35,6 +32,8 @@ public class JwtUtil {
     private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
 
     private final long REFRESH_TOKEN_TIME = TOKEN_TIME * 1000L;
+
+    private SetErrorResponse setErrorResponse;
 
     @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
     private String secretKey;
@@ -88,33 +87,19 @@ public class JwtUtil {
             return true;
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
-            setErrorResponse(response, "Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.", HttpStatus.UNAUTHORIZED.value());
+            setErrorResponse.setErrorMessage(response, "유효하지 않는 JWT 서명 입니다.");
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT token, 만료된 JWT token 입니다.");
-            setErrorResponse(response, "Expired JWT token, 만료된 JWT token 입니다.", HttpStatus.UNAUTHORIZED.value());
+            setErrorResponse.setErrorMessage(response, "만료된 JWT token 입니다.");
         } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
-            setErrorResponse(response, "Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.", HttpStatus.UNAUTHORIZED.value());
+            setErrorResponse.setErrorMessage(response, "지원되지 않는 JWT 토큰 입니다.");
         } catch (IllegalArgumentException e) {
             log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
-            setErrorResponse(response, "JWT claims is empty, 잘못된 JWT 토큰 입니다.", HttpStatus.UNAUTHORIZED.value());
+            setErrorResponse.setErrorMessage(response, "잘못된 JWT 토큰 입니다.");
         }
         return false;
     }
-
-    // 에러 응답 설정
-    private void setErrorResponse(HttpServletResponse response, String message, int status) {
-        response.setStatus(status);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        try {
-            String jsonResponse = new ObjectMapper().writeValueAsString(Map.of("error", message));
-            response.getWriter().write(jsonResponse);
-        } catch (IOException e) {
-            log.error("Error writing error response", e);
-        }
-    }
-
     // 토큰에서 사용자 정보 가져오기
     public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();

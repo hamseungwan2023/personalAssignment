@@ -1,6 +1,7 @@
 package com.sparta.personalassignment.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.personalassignment.Exception.SetErrorResponse;
 import com.sparta.personalassignment.jwt.JwtUtil;
 import com.sparta.personalassignment.schedule.dto.LoginReqDto;
 import com.sparta.personalassignment.schedule.entity.UserRoleEnum;
@@ -8,6 +9,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.ErrorMessage;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -20,6 +22,7 @@ import java.util.Map;
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtUtil jwtUtil;
+    private SetErrorResponse setErrorResponse = new SetErrorResponse();
     private String username;
 
     public JwtAuthenticationFilter(JwtUtil jwtUtil) {
@@ -67,6 +70,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
         }catch(Exception e){
             log.error(e.getMessage());
+            responseBody.put("로그인에 실패했습니다", e.getMessage());
         }
     }
 
@@ -82,12 +86,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 response.addHeader(JwtUtil.AUTHORIZATION_HEADER, newAccessToken);
                 response.addHeader(JwtUtil.AUTHORIZATION_HEADER, refreshToken);
             }else{
-                throw new IllegalArgumentException(String.valueOf(response));
+                setErrorResponse.setErrorMessage(response,"모든 토큰 값이 만료 되었습니다.");
             }
         }else{
-            response.setStatus(400);
-            throw new IllegalArgumentException(String.valueOf(failed));
+            setErrorResponse.setErrorMessage(response,"로그인에 실패하셨습니다.");
         }
     }
-
 }
