@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -26,14 +28,17 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @RequestBody SignupReqDto reqDto, BindingResult bindingResult) {
         // Validation 예외처리
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        if (fieldErrors.size() > 0) {
-            for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+            if (!fieldErrors.isEmpty()) {
+                for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                    log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
+                    errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+                }
+                return ResponseEntity.badRequest().body(errors);
             }
-            return ResponseEntity.badRequest().body(null);
         }
-
         return ResponseEntity.ok(userService.signup(reqDto));
     }
 }
