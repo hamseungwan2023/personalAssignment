@@ -29,7 +29,7 @@ public class ScheduleController {
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestPart ScheduleReqDto reqDto,
                                   @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                  @RequestPart(value = "file", required = false) MultipartFile file) {
+                                  @Valid @RequestPart(value = "file", required = false) MultipartFile file) {
         try {
             ScheduleResDto savedSchedule = scheduleService.save(reqDto,userDetails.getUser(),file,filepath);
             Map<String, Object> response = new HashMap<>();

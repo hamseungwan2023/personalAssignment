@@ -8,6 +8,8 @@ import com.sparta.personalassignment.dto.ScheduleResDto;
 import com.sparta.personalassignment.entity.User;
 import com.sparta.personalassignment.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +20,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
+    private static final Logger log = LoggerFactory.getLogger(ScheduleService.class);
+
     private final ScheduleRepository scheduleRepository;
     private final FileRepository fileRepository;
 
@@ -41,9 +46,16 @@ public class ScheduleService {
         if (multipartFile != null) {
             String fileName = multipartFile.getOriginalFilename();
             Long fileSize = multipartFile.getSize();
+            String fileExt = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf(".") + 1);
             File entityFile = new File(fileName, schedule, fileSize, filepath);
-            fileRepository.save(entityFile);
+
+            if(fileExt.equals("jpg") || fileExt.equals("jpeg") || fileExt.equals("png")){
+                fileRepository.save(entityFile);
+            }else{
+                throw new IllegalArgumentException("jpg,jpeg,png인 파일만 넣어주세요.");
+            }
             Path dirPath = Paths.get(filepath);
+            
             try{
                 if(!Files.exists(dirPath)){
                     Files.createDirectory(dirPath);

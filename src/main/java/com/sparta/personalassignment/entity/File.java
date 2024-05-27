@@ -19,13 +19,13 @@ public class File extends Timestamped {
     @JoinColumn(name = "schedule_id", nullable = false)
     private Schedule schedule;
 
-    @Column(nullable = false,name = "fileName")
+    @Column(nullable = false)
     private String fileName;
 
-    @Column(nullable = false, name = "fileSize")
+    @Column(nullable = false, name = "file_size")
     private Long fileSize;
 
-    @Column(nullable = false, name = "filePath")
+    @Column(nullable = false, name = "file_path")
     private String filePath;
 
     public File(String fileName, Schedule schedule, Long fileSize, String filePath) {
