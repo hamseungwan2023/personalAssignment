@@ -1,16 +1,18 @@
-package com.sparta.personalassignment.schedule.controller;
+package com.sparta.personalassignment.controller;
 
-import com.sparta.personalassignment.schedule.dto.ScheduleReqDto;
-import com.sparta.personalassignment.schedule.dto.ScheduleResDto;
-import com.sparta.personalassignment.schedule.service.ScheduleService;
+import com.sparta.personalassignment.dto.ScheduleReqDto;
+import com.sparta.personalassignment.dto.ScheduleResDto;
+import com.sparta.personalassignment.service.ScheduleService;
 import com.sparta.personalassignment.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -21,11 +23,15 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
+    @Value("${upload.path}")
+    private String filepath = System.getProperty("user.dir");
+
     @PostMapping
-    public ResponseEntity<?> save(@Valid @RequestBody ScheduleReqDto reqDto,
-                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> save(@Valid @RequestPart ScheduleReqDto reqDto,
+                                  @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                  @RequestPart(value = "file", required = false) MultipartFile file) {
         try {
-            ScheduleResDto savedSchedule = scheduleService.save(reqDto,userDetails.getUser());
+            ScheduleResDto savedSchedule = scheduleService.save(reqDto,userDetails.getUser(),file,filepath);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "일정이 저장되었습니다");
             response.put("schedule", savedSchedule);

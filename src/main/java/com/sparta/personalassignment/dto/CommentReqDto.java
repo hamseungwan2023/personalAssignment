@@ -1,4 +1,4 @@
-package com.sparta.personalassignment.schedule.dto;
+package com.sparta.personalassignment.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

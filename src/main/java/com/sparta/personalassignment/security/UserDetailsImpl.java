@@ -1,8 +1,8 @@
 package com.sparta.personalassignment.security;
 
 
-import com.sparta.personalassignment.schedule.entity.User;
-import com.sparta.personalassignment.schedule.entity.UserRoleEnum;
+import com.sparta.personalassignment.entity.User;
+import com.sparta.personalassignment.entity.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

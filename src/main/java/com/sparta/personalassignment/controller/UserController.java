@@ -1,8 +1,8 @@
-package com.sparta.personalassignment.schedule.controller;
+package com.sparta.personalassignment.controller;
 
 
-import com.sparta.personalassignment.schedule.dto.SignupReqDto;
-import com.sparta.personalassignment.schedule.service.UserService;
+import com.sparta.personalassignment.dto.SignupReqDto;
+import com.sparta.personalassignment.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

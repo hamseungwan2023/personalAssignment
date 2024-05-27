@@ -1,9 +1,9 @@
-package com.sparta.personalassignment.schedule.controller;
+package com.sparta.personalassignment.controller;
 
-import com.sparta.personalassignment.schedule.dto.CommentReqDto;
-import com.sparta.personalassignment.schedule.dto.CommentResDto;
-import com.sparta.personalassignment.schedule.entity.Schedule;
-import com.sparta.personalassignment.schedule.service.CommentService;
+import com.sparta.personalassignment.dto.CommentResDto;
+import com.sparta.personalassignment.dto.CommentReqDto;
+import com.sparta.personalassignment.entity.Schedule;
+import com.sparta.personalassignment.service.CommentService;
 import com.sparta.personalassignment.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

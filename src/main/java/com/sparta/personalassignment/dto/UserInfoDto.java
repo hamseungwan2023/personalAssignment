@@ -1,6 +1,6 @@
-package com.sparta.personalassignment.schedule.dto;
+package com.sparta.personalassignment.dto;
 
-import com.sparta.personalassignment.schedule.entity.User;
+import com.sparta.personalassignment.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

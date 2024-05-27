@@ -1,7 +1,7 @@
 package com.sparta.personalassignment.security;
 
-import com.sparta.personalassignment.schedule.entity.User;
-import com.sparta.personalassignment.schedule.repository.UserRepository;
+import com.sparta.personalassignment.entity.User;
+import com.sparta.personalassignment.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

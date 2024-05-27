@@ -1,7 +1,7 @@
-package com.sparta.personalassignment.schedule.entity;
+package com.sparta.personalassignment.entity;
 
 
-import com.sparta.personalassignment.schedule.dto.CommentReqDto;
+import com.sparta.personalassignment.dto.CommentReqDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

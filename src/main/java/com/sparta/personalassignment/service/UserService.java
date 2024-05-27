@@ -1,12 +1,10 @@
-package com.sparta.personalassignment.schedule.service;
+package com.sparta.personalassignment.service;
 
-import com.mysql.cj.log.Log;
-import com.sparta.personalassignment.schedule.dto.LoginReqDto;
-import com.sparta.personalassignment.schedule.dto.SignupReqDto;
-import com.sparta.personalassignment.schedule.dto.UserInfoDto;
-import com.sparta.personalassignment.schedule.entity.User;
-import com.sparta.personalassignment.schedule.entity.UserRoleEnum;
-import com.sparta.personalassignment.schedule.repository.UserRepository;
+import com.sparta.personalassignment.dto.SignupReqDto;
+import com.sparta.personalassignment.dto.UserInfoDto;
+import com.sparta.personalassignment.entity.User;
+import com.sparta.personalassignment.entity.UserRoleEnum;
+import com.sparta.personalassignment.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

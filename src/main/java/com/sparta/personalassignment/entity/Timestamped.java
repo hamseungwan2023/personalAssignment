@@ -1,4 +1,4 @@
-package com.sparta.personalassignment.schedule.entity;
+package com.sparta.personalassignment.entity;
 
 
 import jakarta.persistence.*;

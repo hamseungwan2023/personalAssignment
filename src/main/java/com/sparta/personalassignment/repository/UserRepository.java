@@ -1,6 +1,6 @@
-package com.sparta.personalassignment.schedule.repository;
+package com.sparta.personalassignment.repository;
 
-import com.sparta.personalassignment.schedule.entity.User;
+import com.sparta.personalassignment.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

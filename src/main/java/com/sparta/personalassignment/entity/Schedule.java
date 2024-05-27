@@ -1,7 +1,7 @@
-package com.sparta.personalassignment.schedule.entity;
+package com.sparta.personalassignment.entity;
 
 
-import com.sparta.personalassignment.schedule.dto.ScheduleReqDto;
+import com.sparta.personalassignment.dto.ScheduleReqDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,10 +25,14 @@ public class Schedule extends Timestamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Schedule(ScheduleReqDto reqDto, User user) {
+    @OneToOne(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    private File file;
+
+    public Schedule(ScheduleReqDto reqDto, User user, File file) {
         this.title = reqDto.getTitle();
         this.detail = reqDto.getDetail();
         this.user = user;
+        this.file = file;
     }
     public void update (ScheduleReqDto reqDto){
         this.title = reqDto.getTitle();

@@ -1,11 +1,11 @@
-package com.sparta.personalassignment.schedule.service;
+package com.sparta.personalassignment.service;
 
-import com.sparta.personalassignment.schedule.dto.CommentReqDto;
-import com.sparta.personalassignment.schedule.dto.CommentResDto;
-import com.sparta.personalassignment.schedule.entity.Comment;
-import com.sparta.personalassignment.schedule.entity.Schedule;
-import com.sparta.personalassignment.schedule.entity.User;
-import com.sparta.personalassignment.schedule.repository.CommentRepository;
+import com.sparta.personalassignment.dto.CommentResDto;
+import com.sparta.personalassignment.dto.CommentReqDto;
+import com.sparta.personalassignment.entity.Comment;
+import com.sparta.personalassignment.entity.Schedule;
+import com.sparta.personalassignment.entity.User;
+import com.sparta.personalassignment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

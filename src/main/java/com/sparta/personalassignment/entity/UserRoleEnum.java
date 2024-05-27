@@ -1,4 +1,4 @@
-package com.sparta.personalassignment.schedule.entity;
+package com.sparta.personalassignment.entity;
 
 public enum UserRoleEnum {
     USER(Authority.USER),  // 사용자 권한

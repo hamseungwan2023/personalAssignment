@@ -1,7 +1,7 @@
 package com.sparta.personalassignment.jwt;
 
 import com.sparta.personalassignment.Exception.SetErrorResponse;
-import com.sparta.personalassignment.schedule.entity.UserRoleEnum;
+import com.sparta.personalassignment.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
