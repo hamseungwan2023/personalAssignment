@@ -4,10 +4,13 @@ import com.sparta.personalassignment.dto.SignupReqDto;
 import com.sparta.personalassignment.dto.UserInfoDto;
 import com.sparta.personalassignment.entity.User;
 import com.sparta.personalassignment.entity.UserRoleEnum;
+import com.sparta.personalassignment.jwt.JwtUtil;
 import com.sparta.personalassignment.repository.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.token.TokenService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

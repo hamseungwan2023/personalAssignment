@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.Map;
 
-@Slf4j
+@Slf4j(topic = "error")
 public class SetErrorResponse {
 
     public void setErrorMessage(HttpServletResponse response, String errorMessage) {

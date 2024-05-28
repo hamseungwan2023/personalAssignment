@@ -1,6 +1,7 @@
 package com.sparta.personalassignment.jwt;
 
 import com.sparta.personalassignment.Exception.SetErrorResponse;
+import com.sparta.personalassignment.entity.RefreshToken;
 import com.sparta.personalassignment.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -29,9 +30,9 @@ public class JwtUtil {
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
     // 토큰 만료시간
-    private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
+    private final long TOKEN_TIME = 1 * 1 * 1000L; // 60분
 
-    private final long REFRESH_TOKEN_TIME = TOKEN_TIME * 1000L;
+    private final long REFRESH_TOKEN_TIME = 5000 * 1000L;
 
     private SetErrorResponse setErrorResponse;
 
@@ -50,8 +51,7 @@ public class JwtUtil {
     public String createToken(String username, UserRoleEnum role) {
         Date date = new Date();
 
-        return BEARER_PREFIX +
-                Jwts.builder()
+        return Jwts.builder()
                         .setSubject(username) // 사용자 식별자값(ID)
                         .claim(AUTHORIZATION_KEY, role) // 사용자 권한
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
@@ -63,7 +63,7 @@ public class JwtUtil {
     public String createRefreshToken(String username, UserRoleEnum role) {
         Date date = new Date();
 
-        return BEARER_PREFIX + Jwts.builder()
+        return Jwts.builder()
                 .setSubject(username)
                 .claim(REFRESH_KEY, role)
                 .setExpiration(new Date(date.getTime() + REFRESH_TOKEN_TIME))
@@ -71,6 +71,7 @@ public class JwtUtil {
                 .signWith(key, signatureAlgorithm)
                 .compact();
     }
+
 
     // header 에서 JWT 가져오기
     public String getJwtFromHeader(HttpServletRequest request) {
@@ -103,5 +104,16 @@ public class JwtUtil {
     // 토큰에서 사용자 정보 가져오기
     public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    }
+
+    public String getUsernameFromToken(String token) {
+        Claims claims = getUserInfoFromToken(token);
+        return claims.getSubject();  // 클레임에서 사용자 이름 추출
+    }
+
+    // 토큰에서 역할 정보 추출
+    public UserRoleEnum getRoleFromToken(String token) {
+        Claims claims = getUserInfoFromToken(token);
+        return UserRoleEnum.valueOf((String) claims.get(REFRESH_KEY));
     }
 }

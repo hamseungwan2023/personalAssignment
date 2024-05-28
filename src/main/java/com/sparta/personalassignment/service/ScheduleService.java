@@ -20,7 +20,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,14 +39,14 @@ public class ScheduleService {
                                User user,
                                MultipartFile multipartFile,
                                String filepath) {
-        File file = new File();
-        Schedule schedule = new Schedule(reqDto, user, file);
+
+        Schedule schedule = new Schedule(reqDto, user);
 
         if (multipartFile != null) {
             String fileName = multipartFile.getOriginalFilename();
             Long fileSize = multipartFile.getSize();
             String fileExt = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf(".") + 1);
-            File entityFile = new File(fileName, schedule, fileSize, filepath);
+            File entityFile = new File(fileName, schedule, fileSize, filepath, fileExt);
 
             if(fileExt.equals("jpg") || fileExt.equals("jpeg") || fileExt.equals("png")){
                 fileRepository.save(entityFile);
@@ -92,6 +91,7 @@ public class ScheduleService {
                                          ScheduleReqDto reqDto,
                                          User user) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 아이디 값은 존재하지 않습니다."));
+
         if (password.equals(user.getPassword())) {
             schedule.update(reqDto);
             return new ScheduleResDto(schedule);

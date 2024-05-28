@@ -25,14 +25,11 @@ public class Schedule extends Timestamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToOne(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
-    private File file;
 
-    public Schedule(ScheduleReqDto reqDto, User user, File file) {
+    public Schedule(ScheduleReqDto reqDto, User user) {
         this.title = reqDto.getTitle();
         this.detail = reqDto.getDetail();
         this.user = user;
-        this.file = file;
     }
     public void update (ScheduleReqDto reqDto){
         this.title = reqDto.getTitle();
