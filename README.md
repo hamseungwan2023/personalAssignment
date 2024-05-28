@@ -4,7 +4,7 @@
 
 ERD 
 
-<img width="445" alt="image" src="https://github.com/hamseungwan2023/personalAssignment/assets/125807759/09a1362f-f385-488b-b93c-b4864c95e5c7">
+![image](https://github.com/hamseungwan2023/personalAssignment/assets/125807759/68013143-180f-4130-872d-93dc880fd328)
 
 useCase diagram
 
