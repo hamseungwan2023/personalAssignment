@@ -1,5 +1,6 @@
 package com.sparta.personalassignment.service;
 
+import com.sparta.personalassignment.dto.FileReqDto;
 import com.sparta.personalassignment.entity.File;
 import com.sparta.personalassignment.entity.Schedule;
 import com.sparta.personalassignment.repository.FileRepository;
@@ -46,7 +47,10 @@ public class ScheduleService {
             String fileName = multipartFile.getOriginalFilename();
             Long fileSize = multipartFile.getSize();
             String fileExt = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf(".") + 1);
-            File entityFile = new File(fileName, schedule, fileSize, filepath, fileExt);
+
+            FileReqDto fileReqDto = new FileReqDto(fileName,filepath,fileExt,fileSize,schedule);
+            File entityFile = new File(fileReqDto);
+
 
             if(fileExt.equals("jpg") || fileExt.equals("jpeg") || fileExt.equals("png")){
                 fileRepository.save(entityFile);

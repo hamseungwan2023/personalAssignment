@@ -1,5 +1,6 @@
 package com.sparta.personalassignment.entity;
 
+import com.sparta.personalassignment.dto.FileReqDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,12 +32,12 @@ public class File extends Timestamped {
     @Column(nullable = false, name = "file_path")
     private String filePath;
 
-    public File(String fileName, Schedule schedule, Long fileSize, String filePath, String fileType) {
-        this.fileName = fileName;
-        this.schedule = schedule;
-        this.fileSize = fileSize;
-        this.filePath = filePath;
-        this.fileType = fileType;
+    public File(FileReqDto reqDto) {
+        this.fileName = reqDto.getFileName();
+        this.schedule = reqDto.getSchedule();
+        this.fileSize = reqDto.getFileSize();
+        this.filePath = reqDto.getFilePath();
+        this.fileType = reqDto.getFileType();
     }
 
 }
