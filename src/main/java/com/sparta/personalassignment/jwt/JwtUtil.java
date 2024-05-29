@@ -1,7 +1,6 @@
 package com.sparta.personalassignment.jwt;
 
 import com.sparta.personalassignment.Exception.SetErrorResponse;
-import com.sparta.personalassignment.entity.RefreshToken;
 import com.sparta.personalassignment.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

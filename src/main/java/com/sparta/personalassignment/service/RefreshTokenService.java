@@ -1,6 +1,5 @@
 package com.sparta.personalassignment.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.personalassignment.entity.RefreshToken;
 import com.sparta.personalassignment.entity.UserRoleEnum;
 import com.sparta.personalassignment.jwt.JwtUtil;

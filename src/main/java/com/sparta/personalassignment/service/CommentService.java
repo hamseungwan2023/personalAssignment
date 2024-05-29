@@ -1,7 +1,7 @@
 package com.sparta.personalassignment.service;
 
-import com.sparta.personalassignment.dto.CommentResDto;
 import com.sparta.personalassignment.dto.CommentReqDto;
+import com.sparta.personalassignment.dto.CommentResDto;
 import com.sparta.personalassignment.entity.Comment;
 import com.sparta.personalassignment.entity.Schedule;
 import com.sparta.personalassignment.entity.User;
