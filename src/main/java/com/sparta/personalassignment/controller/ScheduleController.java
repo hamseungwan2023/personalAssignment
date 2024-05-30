@@ -43,7 +43,7 @@ public class ScheduleController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<?> searchSchedule(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(scheduleService.findById(id));
@@ -54,7 +54,7 @@ public class ScheduleController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/get")
     public ResponseEntity<List> searchSchedules() {
         return ResponseEntity.ok(scheduleService.findAll());
     }
