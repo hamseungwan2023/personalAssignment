@@ -8,7 +8,7 @@ ERD
 
 useCase diagram
 
-<img width="593" alt="image" src="https://github.com/hamseungwan2023/personalAssignment/assets/125807759/e9375654-d21f-4a80-9122-2e850d486e07">
+![image](https://github.com/hamseungwan2023/personalAssignment/assets/125807759/55affd60-0e29-4674-bc4d-ecf9a0a47c8e)
 
 
 api명세서
