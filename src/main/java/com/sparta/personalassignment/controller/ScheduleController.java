@@ -27,9 +27,10 @@ public class ScheduleController {
     private String filepath = System.getProperty("user.dir");
 
     @PostMapping
-    public ResponseEntity<?> save(@Valid @RequestPart ScheduleReqDto reqDto,
-                                  @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                  @Valid @RequestPart(value = "file", required = false) MultipartFile file) {
+    public ResponseEntity<?> save(@Valid @RequestPart(value = "schedule") ScheduleReqDto reqDto,
+                                  @Valid @RequestPart(value = "file", required = false) MultipartFile file,
+                                  @AuthenticationPrincipal UserDetailsImpl userDetails
+                                  ) {
         try {
             ScheduleResDto savedSchedule = scheduleService.save(reqDto,userDetails.getUser(),file,filepath);
             Map<String, Object> response = new HashMap<>();
@@ -62,11 +63,12 @@ public class ScheduleController {
     public ResponseEntity<?> updateSchedule(
             @RequestParam String password,
             @PathVariable Long id,
-            @Valid @RequestBody ScheduleReqDto reqDto,
+            @Valid @RequestPart(value = "schedule") ScheduleReqDto reqDto,
+            @Valid @RequestPart(value = "file", required = false) MultipartFile file,
             @AuthenticationPrincipal UserDetailsImpl userDetails ) {
 
         try {
-            ScheduleResDto savedSchedule = scheduleService.updateSchedule(id, password, reqDto,userDetails.getUser());
+            ScheduleResDto savedSchedule = scheduleService.updateSchedule(id, password, reqDto,userDetails.getUser(),file,filepath);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "일정이 수정되었습니다.");
             response.put("schedule", savedSchedule);

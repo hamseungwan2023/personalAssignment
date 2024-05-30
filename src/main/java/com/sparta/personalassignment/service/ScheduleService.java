@@ -1,12 +1,11 @@
 package com.sparta.personalassignment.service;
 
-import com.sparta.personalassignment.dto.FileReqDto;
-import com.sparta.personalassignment.entity.File;
-import com.sparta.personalassignment.entity.Schedule;
-import com.sparta.personalassignment.repository.FileRepository;
 import com.sparta.personalassignment.dto.ScheduleReqDto;
 import com.sparta.personalassignment.dto.ScheduleResDto;
+import com.sparta.personalassignment.entity.File;
+import com.sparta.personalassignment.entity.Schedule;
 import com.sparta.personalassignment.entity.User;
+import com.sparta.personalassignment.repository.FileRepository;
 import com.sparta.personalassignment.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -32,45 +31,19 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final FileRepository fileRepository;
 
-
-
-
     //일정 생성
     public ScheduleResDto save(ScheduleReqDto reqDto,
                                User user,
                                MultipartFile multipartFile,
                                String filepath) {
-
-        Schedule schedule = new Schedule(reqDto, user);
-
+        File file = null;
         if (multipartFile != null) {
-            String fileName = multipartFile.getOriginalFilename();
-            Long fileSize = multipartFile.getSize();
-            String fileExt = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf(".") + 1);
-
-            FileReqDto fileReqDto = new FileReqDto(fileName,filepath,fileExt,fileSize,schedule);
-            File entityFile = new File(fileReqDto);
-
-
-            if(fileExt.equals("jpg") || fileExt.equals("jpeg") || fileExt.equals("png")){
-                fileRepository.save(entityFile);
-            }else{
-                throw new IllegalArgumentException("jpg,jpeg,png인 파일만 넣어주세요.");
-            }
-            Path dirPath = Paths.get(filepath);
-            
-            try{
-                if(!Files.exists(dirPath)){
-                    Files.createDirectory(dirPath);
-                }
-                Path filePath = dirPath.resolve(fileName);
-                multipartFile.transferTo(filePath);
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage());
-            }
+            file = fileHandler(multipartFile, filepath, true, null);
         }
+        Schedule schedule = reqDto.toSchedule(user, file);
 
         return new ScheduleResDto(scheduleRepository.save(schedule));
+
     }
 
     //일정 조회
@@ -93,11 +66,18 @@ public class ScheduleService {
     public ScheduleResDto updateSchedule(Long id,
                                          String password,
                                          ScheduleReqDto reqDto,
-                                         User user) {
+                                         User user,
+                                         MultipartFile multipartFile,
+                                         String filepath) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 아이디 값은 존재하지 않습니다."));
+        File file = null;
 
         if (password.equals(user.getPassword())) {
             schedule.update(reqDto);
+            if (multipartFile != null) {
+                Long fileId = schedule.getFile() != null ? schedule.getFile().getId() : null;
+                file = fileHandler(multipartFile, filepath, false, fileId);
+            }
             return new ScheduleResDto(schedule);
         } else {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
@@ -114,8 +94,49 @@ public class ScheduleService {
         if (password.equals(user.getPassword())) {
             scheduleRepository.deleteById(id);
         } else {
-            throw new IllegalArgumentException("비밀;번호가 일치하지 않습니다.");
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }
 
+    //중복된 기능 하나로 묶기
+    public File fileHandler(MultipartFile multipartFile, String filepath, boolean isSaveFile, Long fileId) {
+        String fileName = multipartFile.getOriginalFilename();
+        Long fileSize = multipartFile.getSize();
+        String fileExt = multipartFile.getOriginalFilename()
+                .substring(multipartFile.getOriginalFilename().lastIndexOf(".") + 1);
+
+        File entityFile = null;
+
+        if (fileExt.equals("jpg") || fileExt.equals("jpeg") || fileExt.equals("png")) {
+            if (isSaveFile) {
+                entityFile = File.builder()
+                        .fileName(fileName)
+                        .fileSize(fileSize)
+                        .filePath(fileName + "/" + fileExt)
+                        .fileType(fileExt)
+                        .build();
+
+                fileRepository.save(entityFile);
+            } else {
+                entityFile = fileRepository.findById(fileId)
+                        .orElseThrow(() -> new IllegalArgumentException("해당 파일이 존재하지 않습니다."));
+                entityFile.update(fileName, fileSize, fileExt, filepath + "/" + fileName);
+            }
+        } else {
+            throw new IllegalArgumentException("jpg,jpeg,png인 파일만 넣어주세요.");
+        }
+
+        Path dirPath = Paths.get(filepath);
+
+        try {
+            if (!Files.exists(dirPath)) {
+                Files.createDirectory(dirPath);
+            }
+            Path filePath = dirPath.resolve(fileName);
+            multipartFile.transferTo(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return entityFile;
+    }
 }
