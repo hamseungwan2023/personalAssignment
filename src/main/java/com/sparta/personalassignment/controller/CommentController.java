@@ -56,5 +56,4 @@ public class CommentController {
     private ResponseEntity<String> handleException(MethodArgumentNotValidException e) {
         return new ResponseEntity<>(Objects.requireNonNull(e.getFieldError()).getDefaultMessage(), HttpStatus.BAD_REQUEST);
     }
-
 }
