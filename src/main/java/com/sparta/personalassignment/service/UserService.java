@@ -1,11 +1,10 @@
 package com.sparta.personalassignment.service;
 
-import com.sparta.personalassignment.dto. SignupReqDto;
+import com.sparta.personalassignment.dto.SignupReqDto;
 import com.sparta.personalassignment.dto.UserInfoDto;
 import com.sparta.personalassignment.entity.User;
 import com.sparta.personalassignment.entity.UserRoleEnum;
 import com.sparta.personalassignment.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -13,13 +12,16 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
 
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public UserInfoDto signup(SignupReqDto reqDto) {
         String username = reqDto.getUsername();

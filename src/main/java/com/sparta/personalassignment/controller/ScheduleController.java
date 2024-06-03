@@ -5,7 +5,6 @@ import com.sparta.personalassignment.dto.ScheduleResDto;
 import com.sparta.personalassignment.security.UserDetailsImpl;
 import com.sparta.personalassignment.service.ScheduleService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +13,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/schedules")
 public class ScheduleController {
 
@@ -25,6 +25,10 @@ public class ScheduleController {
 
     @Value("${upload.path}")
     private String filepath = System.getProperty("user.dir");
+
+    public ScheduleController(ScheduleService scheduleService) {
+        this.scheduleService = scheduleService;
+    }
 
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestPart(value = "schedule") ScheduleReqDto reqDto,

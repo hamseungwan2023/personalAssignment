@@ -5,17 +5,20 @@ import com.sparta.personalassignment.entity.RefreshToken;
 import com.sparta.personalassignment.entity.UserRoleEnum;
 import com.sparta.personalassignment.jwt.JwtUtil;
 import com.sparta.personalassignment.repository.RefreshTokenRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
+
+    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, JwtUtil jwtUtil) {
+        this.refreshTokenRepository = refreshTokenRepository;
+        this.jwtUtil = jwtUtil;
+    }
 
     public void saveRefreshToken(String refreshToken) {
         Optional<RefreshToken> existingTokenOpt = refreshTokenRepository.findByHashedToken(refreshToken);

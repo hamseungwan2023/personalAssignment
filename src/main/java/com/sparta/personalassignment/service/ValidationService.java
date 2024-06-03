@@ -3,10 +3,9 @@ package com.sparta.personalassignment.service;
 import com.sparta.personalassignment.repository.CommentRepository;
 import com.sparta.personalassignment.repository.ScheduleRepository;
 import com.sparta.personalassignment.repository.UserRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class ValidationService {
     private final CommentRepository commentRepository;
     private final ScheduleRepository scheduleRepository;

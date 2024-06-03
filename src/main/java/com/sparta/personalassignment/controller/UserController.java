@@ -7,7 +7,6 @@ import com.sparta.personalassignment.service.RefreshTokenService;
 import com.sparta.personalassignment.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -23,11 +22,15 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
+
+    public UserController(UserService userService, RefreshTokenService refreshTokenService) {
+        this.userService = userService;
+        this.refreshTokenService = refreshTokenService;
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @RequestBody SignupReqDto reqDto, BindingResult bindingResult) {

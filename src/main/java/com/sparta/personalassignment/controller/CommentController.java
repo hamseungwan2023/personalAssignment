@@ -6,7 +6,6 @@ import com.sparta.personalassignment.security.UserDetailsImpl;
 import com.sparta.personalassignment.service.CommentService;
 import com.sparta.personalassignment.service.ValidationService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,12 +15,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Objects;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api")
 public class CommentController {
 
     private final CommentService commentService;
     private final ValidationService validationService;
+
+    public CommentController(CommentService commentService, ValidationService validationService) {
+        this.commentService = commentService;
+        this.validationService = validationService;
+    }
 
     @PostMapping("/schedules/{scheduleId}/comments")
     public ResponseEntity<?> createComment(
