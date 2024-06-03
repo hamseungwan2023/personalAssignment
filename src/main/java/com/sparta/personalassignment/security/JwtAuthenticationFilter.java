@@ -2,6 +2,7 @@ package com.sparta.personalassignment.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.personalassignment.dto.LoginReqDto;
+import com.sparta.personalassignment.dto.LoginResDto;
 import com.sparta.personalassignment.entity.UserRoleEnum;
 import com.sparta.personalassignment.jwt.JwtUtil;
 import com.sparta.personalassignment.service.RefreshTokenService;
@@ -25,6 +26,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private String username;
 
     private final RefreshTokenService refreshTokenService;
+
     public JwtAuthenticationFilter(JwtUtil jwtUtil, RefreshTokenService refreshTokenService) {
         this.jwtUtil = jwtUtil;
         this.refreshTokenService = refreshTokenService;
@@ -54,29 +56,30 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
                                             FilterChain chain,
-                                            Authentication authResult) {
+                                            Authentication authResult) throws IOException {
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
-            UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
+        UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
         String accessToken = jwtUtil.createToken(username, role);
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, accessToken);
 
-        String refreshToken = jwtUtil.createRefreshToken(username,role);
+        String refreshToken = jwtUtil.createRefreshToken(username, role);
         String hashedToken = Base64.getEncoder().encodeToString(refreshToken.getBytes());
 
         refreshTokenService.saveRefreshToken(hashedToken);
-        Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("accessToken", accessToken);
-        responseBody.put("refreshToken", refreshToken);
-        responseBody.put("username", username);
+        LoginResDto loginResDto = LoginResDto.builder()
+                .username(username)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        try{
-            new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
-        }catch(Exception e){
+        try {
+            new ObjectMapper().writeValue(response.getOutputStream(), loginResDto);
+        } catch (Exception e) {
             log.error(e.getMessage());
-            responseBody.put("로그인에 실패했습니다", e.getMessage());
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "로그인에 실패하셨습니다.");
         }
     }
 

@@ -1,6 +1,6 @@
 package com.sparta.personalassignment.jwt;
 
-import com.sparta.personalassignment.Exception.SetErrorResponse;
+import com.sparta.personalassignment.exception.SetErrorResponse;
 import com.sparta.personalassignment.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -51,13 +51,14 @@ public class JwtUtil {
         Date date = new Date();
 
         return Jwts.builder()
-                        .setSubject(username) // 사용자 식별자값(ID)
-                        .claim(AUTHORIZATION_KEY, role) // 사용자 권한
-                        .setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
-                        .setIssuedAt(date) // 발급일
-                        .signWith(key, signatureAlgorithm) // 암호화 알고리즘
-                        .compact();
+                .setSubject(username) // 사용자 식별자값(ID)
+                .claim(AUTHORIZATION_KEY, role) // 사용자 권한
+                .setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
+                .setIssuedAt(date) // 발급일
+                .signWith(key, signatureAlgorithm) // 암호화 알고리즘
+                .compact();
     }
+
     //refreshToken 생성
     public String createRefreshToken(String username, UserRoleEnum role) {
         Date date = new Date();
@@ -100,10 +101,11 @@ public class JwtUtil {
         }
         return false;
     }
+
     // 토큰에서 사용자 정보 가져오기
-    public Claims getUserInfoFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-    }
+        public Claims getUserInfoFromToken(String token) {
+            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        }
 
     public String getUsernameFromToken(String token) {
         Claims claims = getUserInfoFromToken(token);

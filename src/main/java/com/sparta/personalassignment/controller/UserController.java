@@ -24,7 +24,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
@@ -47,7 +47,7 @@ public class UserController {
     }
 
     @PostMapping("/tokenRefresh")
-    public ResponseEntity<?> tokenRefresh (HttpServletRequest request) throws JsonProcessingException {
+    public ResponseEntity<?> tokenRefresh(HttpServletRequest request) throws JsonProcessingException {
         String refreshToken = request.getHeader("Refresh-Token");
         return ResponseEntity.ok(refreshTokenService.refreshAccessToken(refreshToken));
     }

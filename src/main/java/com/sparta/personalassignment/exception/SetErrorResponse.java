@@ -1,4 +1,4 @@
-package com.sparta.personalassignment.Exception;
+package com.sparta.personalassignment.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,7 +1,6 @@
 package com.sparta.personalassignment.controller;
 
 import com.sparta.personalassignment.dto.CommentReqDto;
-import com.sparta.personalassignment.dto.CommentResDto;
 import com.sparta.personalassignment.entity.Schedule;
 import com.sparta.personalassignment.security.UserDetailsImpl;
 import com.sparta.personalassignment.service.CommentService;
@@ -17,35 +16,35 @@ import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/comment")
+@RequestMapping("/api")
 public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/{scheduleId}")
-    public CommentResDto createComment(
+    @PostMapping("/schedules/{scheduleId}/comments")
+    public ResponseEntity<?> createComment(
             @PathVariable Schedule scheduleId,
             @Valid @RequestBody CommentReqDto reqDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-
         return commentService.createComment(reqDto, userDetails.getUser(), scheduleId);
     }
 
-    @PutMapping("/{commentId}")
-    public CommentResDto updateComment(
+    @PutMapping("/schedules/{scheduleId}/comments/{commentId}")
+    public ResponseEntity<?> updateComment(
+            @PathVariable Schedule scheduleId,
             @PathVariable Long commentId,
             @Valid @RequestBody CommentReqDto reqDto,
             @AuthenticationPrincipal UserDetailsImpl userdetails) {
-
-        return commentService.updateComment(reqDto, userdetails.getUser(), commentId);
+        return commentService.updateComment(reqDto, userdetails.getUser(), commentId, scheduleId);
     }
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping("/schedules/{scheduleId}/comments/{commentId}")
     public ResponseEntity<?> deleteComment(
+            @PathVariable Schedule scheduleId,
             @PathVariable Long commentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-            commentService.deleteComment(commentId, userDetails.getUser());
-            return ResponseEntity.ok("댓글 삭제가 완료되었습니다.");
+        commentService.deleteComment(commentId, userDetails.getUser(), scheduleId);
+        return ResponseEntity.ok("댓글 삭제가 완료되었습니다.");
     }
 
     @ExceptionHandler

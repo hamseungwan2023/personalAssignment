@@ -69,7 +69,8 @@ public class ScheduleService {
                                          User user,
                                          MultipartFile multipartFile,
                                          String filepath) {
-        Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 아이디 값은 존재하지 않습니다."));
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 아이디 값은 존재하지 않습니다."));
         File file = null;
 
         if (password.equals(user.getPassword())) {

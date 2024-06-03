@@ -35,11 +35,12 @@ public class Schedule extends Timestamped {
     @JoinColumn(name = "file_id")
     private File file;
 
-    public Schedule update (ScheduleReqDto reqDto){
+    public Schedule update(ScheduleReqDto reqDto) {
         this.title = reqDto.getTitle();
         this.detail = reqDto.getDetail();
         return this;
     }
+
     public Schedule updateWithFile(ScheduleReqDto reqDto, File file) {
         this.title = reqDto.getTitle();
         this.detail = reqDto.getDetail();

@@ -25,12 +25,12 @@ public class RefreshTokenService {
         refreshTokenRepository.save(tokenEntity);
     }
 
-    public Map<String,String> refreshAccessToken(String refreshToken) {
+    public Map<String, String> refreshAccessToken(String refreshToken) {
         String encodeToken = Base64.getEncoder().encodeToString(refreshToken.getBytes());
         RefreshToken tokenEntity = refreshTokenRepository.findByHashedToken(encodeToken)
                 .orElseThrow(() -> new RuntimeException("토큰값이 없습니다."));
 
-        byte [] decodeToken = Base64.getDecoder().decode(encodeToken);
+        byte[] decodeToken = Base64.getDecoder().decode(encodeToken);
         String decodeTokenString = new String(decodeToken);
 
         String username = jwtUtil.getUsernameFromToken(decodeTokenString);
@@ -44,7 +44,7 @@ public class RefreshTokenService {
         refreshTokenRepository.delete(tokenEntity);
         refreshTokenRepository.save(new RefreshToken(hashedRefreshToken));
 
-        Map<String,String> responseBody = new HashMap<>();
+        Map<String, String> responseBody = new HashMap<>();
 
         responseBody.put("accessToken", newAccessToken);
         responseBody.put("refreshToken", newRefreshToken);

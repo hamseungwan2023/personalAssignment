@@ -17,7 +17,7 @@ public class File extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false ,name="file_name")
+    @Column(nullable = false, name = "file_name")
     private String fileName;
 
     @Column(nullable = false, name = "file_size")
@@ -33,7 +33,7 @@ public class File extends Timestamped {
         this.fileName = fileName;
         this.fileSize = fileSize;
         this.fileType = fileType;
-        this.filePath = filePath+"/"+fileName;
+        this.filePath = filePath + "/" + fileName;
     }
 
 }

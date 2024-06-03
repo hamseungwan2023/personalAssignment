@@ -16,16 +16,16 @@ public class User extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nickname",nullable = false)
+    @Column(name = "nickname", nullable = false)
     private String nickname;
 
-    @Column(name = "username",nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password",nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "role",nullable = false)
+    @Column(name = "role", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 

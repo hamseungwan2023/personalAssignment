@@ -30,13 +30,10 @@ public class ScheduleController {
     public ResponseEntity<?> save(@Valid @RequestPart(value = "schedule") ScheduleReqDto reqDto,
                                   @Valid @RequestPart(value = "file", required = false) MultipartFile file,
                                   @AuthenticationPrincipal UserDetailsImpl userDetails
-                                  ) {
+    ) {
         try {
-            ScheduleResDto savedSchedule = scheduleService.save(reqDto,userDetails.getUser(),file,filepath);
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "일정이 저장되었습니다");
-            response.put("schedule", savedSchedule);
-            return ResponseEntity.ok(response);
+            ScheduleResDto savedSchedule = scheduleService.save(reqDto, userDetails.getUser(), file, filepath);
+            return ResponseEntity.ok(savedSchedule);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Collections.singletonMap("error", "일정 저장에 실패했습니다: " + e.getMessage()));
@@ -65,14 +62,10 @@ public class ScheduleController {
             @PathVariable Long id,
             @Valid @RequestPart(value = "schedule") ScheduleReqDto reqDto,
             @Valid @RequestPart(value = "file", required = false) MultipartFile file,
-            @AuthenticationPrincipal UserDetailsImpl userDetails ) {
-
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         try {
-            ScheduleResDto savedSchedule = scheduleService.updateSchedule(id, password, reqDto,userDetails.getUser(),file,filepath);
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "일정이 수정되었습니다.");
-            response.put("schedule", savedSchedule);
-            return ResponseEntity.ok(response);
+            ScheduleResDto savedSchedule = scheduleService.updateSchedule(id, password, reqDto, userDetails.getUser(), file, filepath);
+            return ResponseEntity.ok(savedSchedule);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Collections.singletonMap("error", "수정에 실패했습니다." + e.getMessage()));
@@ -85,7 +78,7 @@ public class ScheduleController {
             @PathVariable Long id,
             @RequestParam String password,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        scheduleService.deleteSchedule(id, password,userDetails.getUser());
+        scheduleService.deleteSchedule(id, password, userDetails.getUser());
         return ResponseEntity.ok("일정 삭제가 완료되었습니다.");
     }
 
