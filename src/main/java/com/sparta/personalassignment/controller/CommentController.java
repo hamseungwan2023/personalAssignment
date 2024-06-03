@@ -4,6 +4,7 @@ import com.sparta.personalassignment.dto.CommentReqDto;
 import com.sparta.personalassignment.entity.Schedule;
 import com.sparta.personalassignment.security.UserDetailsImpl;
 import com.sparta.personalassignment.service.CommentService;
+import com.sparta.personalassignment.service.ValidationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,13 +21,16 @@ import java.util.Objects;
 public class CommentController {
 
     private final CommentService commentService;
+    private final ValidationService validationService;
 
     @PostMapping("/schedules/{scheduleId}/comments")
     public ResponseEntity<?> createComment(
             @PathVariable Schedule scheduleId,
             @Valid @RequestBody CommentReqDto reqDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return commentService.createComment(reqDto, userDetails.getUser(), scheduleId);
+        validationService.validSchedule(scheduleId.getId());
+        validationService.validUser(userDetails.getUser().getId());
+        return ResponseEntity.ok(commentService.createComment(reqDto, userDetails.getUser(), scheduleId));
     }
 
     @PutMapping("/schedules/{scheduleId}/comments/{commentId}")
@@ -34,8 +38,12 @@ public class CommentController {
             @PathVariable Schedule scheduleId,
             @PathVariable Long commentId,
             @Valid @RequestBody CommentReqDto reqDto,
-            @AuthenticationPrincipal UserDetailsImpl userdetails) {
-        return commentService.updateComment(reqDto, userdetails.getUser(), commentId, scheduleId);
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        validationService.validUser(userDetails.getUser().getId());
+        validationService.validSchedule(scheduleId.getId());
+        validationService.validComment(commentId);
+        commentService.updateComment(reqDto,commentId);
+        return ResponseEntity.ok(reqDto);
     }
 
     @DeleteMapping("/schedules/{scheduleId}/comments/{commentId}")
@@ -43,7 +51,10 @@ public class CommentController {
             @PathVariable Schedule scheduleId,
             @PathVariable Long commentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        commentService.deleteComment(commentId, userDetails.getUser(), scheduleId);
+        validationService.validUser(userDetails.getUser().getId());
+        validationService.validSchedule(scheduleId.getId());
+        validationService.validComment(commentId);
+        commentService.deleteComment(commentId);
         return ResponseEntity.ok("댓글 삭제가 완료되었습니다.");
     }
 

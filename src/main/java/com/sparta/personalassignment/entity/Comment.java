@@ -30,11 +30,10 @@ public class Comment extends Timestamped {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "schdule_id", nullable = false)
+    @JoinColumn(name = "schedule_id", nullable = false)
     private Schedule schedule;
 
-    public void update(CommentReqDto reqDto, User user) {
+    public void update(CommentReqDto reqDto) {
         this.content = reqDto.getContent();
-        this.user = user;
     }
 }

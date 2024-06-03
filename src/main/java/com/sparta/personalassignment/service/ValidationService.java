@@ -1,23 +1,26 @@
-package com.sparta.personalassignment.exception;
+package com.sparta.personalassignment.service;
 
 import com.sparta.personalassignment.repository.CommentRepository;
 import com.sparta.personalassignment.repository.ScheduleRepository;
 import com.sparta.personalassignment.repository.UserRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-public class ValidationException {
+@Service
+public class ValidationService {
     private final CommentRepository commentRepository;
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
 
-    public ValidationException(final CommentRepository commentRepository, final ScheduleRepository scheduleRepository, final UserRepository userRepository) {
+    public ValidationService(CommentRepository commentRepository, ScheduleRepository scheduleRepository, UserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.scheduleRepository = scheduleRepository;
         this.userRepository = userRepository;
     }
 
-    public void validUser (Long userId){
+    public void validUser(Long userId) {
         userRepository.findById(userId)
-                .orElseThrow(()-> new IllegalArgumentException("해당 유저가 존재하지않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지않습니다."));
     }
 
     public void validSchedule(Long scheduleId) {

@@ -1,7 +1,8 @@
-package com.sparta.personalassignment.exception;
+package com.sparta.personalassignment.service;
 
 import com.sparta.personalassignment.entity.File;
 import com.sparta.personalassignment.repository.FileRepository;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -9,10 +10,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class FileHandlerException {
+@Service
+public class FileHandlerService {
     private final FileRepository fileRepository;
 
-    public FileHandlerException(FileRepository fileRepository) {
+    public FileHandlerService(FileRepository fileRepository) {
         this.fileRepository = fileRepository;
     }
 
@@ -29,7 +31,7 @@ public class FileHandlerException {
                 entityFile = File.builder()
                         .fileName(fileName)
                         .fileSize(fileSize)
-                        .filePath(fileName + "/" + fileExt)
+                        .filePath(filepath + "/" + fileName)
                         .fileType(fileExt)
                         .build();
                 fileRepository.save(entityFile);

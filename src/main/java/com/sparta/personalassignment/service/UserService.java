@@ -1,6 +1,6 @@
 package com.sparta.personalassignment.service;
 
-import com.sparta.personalassignment.dto.SignupReqDto;
+import com.sparta.personalassignment.dto. SignupReqDto;
 import com.sparta.personalassignment.dto.UserInfoDto;
 import com.sparta.personalassignment.entity.User;
 import com.sparta.personalassignment.entity.UserRoleEnum;

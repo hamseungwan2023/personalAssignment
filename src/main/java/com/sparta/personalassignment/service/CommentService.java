@@ -1,47 +1,46 @@
 package com.sparta.personalassignment.service;
 
 import com.sparta.personalassignment.dto.CommentReqDto;
+import com.sparta.personalassignment.dto.CommentResDto;
 import com.sparta.personalassignment.entity.Comment;
 import com.sparta.personalassignment.entity.Schedule;
 import com.sparta.personalassignment.entity.User;
-import com.sparta.personalassignment.exception.ValidationException;
 import com.sparta.personalassignment.repository.CommentRepository;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 public class CommentService {
     private static final Logger log = LoggerFactory.getLogger(CommentService.class);
     private final CommentRepository commentRepository;
-    private ValidationException validationException;
 
-    public ResponseEntity<?> createComment(CommentReqDto reqDto, User user, Schedule scheduleId) {
-        validationException.validSchedule(scheduleId.getId());
-        final Comment comment = reqDto.toComment(user, scheduleId);
-        return ResponseEntity.ok(commentRepository.save(comment));
-
+    public CommentService(CommentRepository commentRepository) {
+        this.commentRepository = commentRepository;
     }
 
+    // 댓글 작성
     @Transactional
-    public ResponseEntity<?> updateComment(CommentReqDto reqDto, User user, Long commentId, Schedule scheduleId) {
-        validationException.validUser(user.getId());
-        validationException.validSchedule(scheduleId.getId());
-        validationException.validComment(commentId);
-        final Comment comment = new Comment();
-        comment.update(reqDto, user);
-        return ResponseEntity.ok(comment);
+    public CommentResDto createComment(CommentReqDto reqDto, User user, Schedule scheduleId) {
+        Comment comment = reqDto.toComment(user, scheduleId);
+        commentRepository.save(comment);
+        CommentResDto resDto = new CommentResDto(comment);
+        return  resDto;
     }
-
-    public void deleteComment(Long commentId, @AuthenticationPrincipal User user, Schedule scheduleId) {
-        validationException.validUser(user.getId());
-        validationException.validSchedule(scheduleId.getId());
-        validationException.validComment(commentId);
+    
+    // 댓글 수정
+    @Transactional
+    public Comment updateComment(CommentReqDto reqDto, Long commentId) {
+        Comment comment =  commentRepository.findById(commentId)
+                .orElseThrow(()-> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+        comment.update(reqDto);
+        return comment;
+    }
+    
+    // 댓글 삭제
+    @Transactional
+    public void deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
     }
 }
